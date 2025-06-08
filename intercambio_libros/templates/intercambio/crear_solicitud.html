@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>📖 Crear solicitud de intercambio</h2>
+
+<form method="post">
+    {% csrf_token %}
+    <label for="libro_ofrecido">Elige tu libro a ofrecer:</label><br>
+    <select name="libro_ofrecido" required>
+        {% for libro in mis_libros %}
+            <option value="{{ libro.id }}">{{ libro.titulo }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <label for="libro_solicitado">Elige el libro que deseas:</label><br>
+  <select name="libro_solicitado" required>
+    {% for libro in libros_disponibles %}
+        <option value="{{ libro.id }}">{{ libro.titulo }} (de {{ libro.propietario.username }})</option>
+    {% empty %}
+        <option disabled>No hay libros disponibles para intercambio.</option>
+    {% endfor %}
+</select>
+
+
+    <button type="submit">Enviar solicitud</button>
+</form>
+
+<a href="{% url 'intercambio:listar_solicitudes' %}">Volver a la lista de solicitudes</a>
+{% endblock %}

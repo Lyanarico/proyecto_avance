@@ -1,4 +1,3 @@
-<!-- templates/base.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -6,15 +5,20 @@
     <title>Plataforma de Intercambio de Libros</title>
 </head>
 <body>
-    <h1> 📖 Plataforma de Intercambio de Libros</h1>
+    <h1>📖 Plataforma de Intercambio de Libros</h1>
 
-    <nav style="background-color:rgb(42, 189, 132); padding: 25px;">
+    <nav style="background-color: rgb(42, 189, 132); padding: 25px;">
         <a href="{% url 'home' %}">Inicio</a>
-       
+        <a href="{% url 'libros:lista_libros_publico' %}">Libros disponibles</a>
+
+
         {% if user.is_authenticated %}
-            <a href=" ">Subir libros</a>
-            <a href="">Ver historial</a>
-            <span>Bienvenido {{ user.username }} </span>
+            <a href="{% url 'libros:crear_libro' %}">Subir libros</a>
+            <a href="{% url 'libros:lista_libros' %}">Mis libros</a>
+            <a href="{% url 'intercambio:listar_solicitudes' %}">Intercambios</a>
+
+            <a href="{% url 'historial:listar_historial' %}">Ver historial</a>
+            <span>Bienvenido {{ user.username }}</span>
             <form action="{% url 'logout' %}" method="post" style="display: inline;">
                 {% csrf_token %}
                 <button type="submit" style="background: none; border: none; color: blue; text-decoration: underline; cursor: pointer;">
@@ -23,14 +27,25 @@
             </form>
         {% else %}
             <a href="{% url 'login' %}">Iniciar sesión</a>
-            <a href="{% url "registrar" %}">Registrarse</a>
+            <a href="{% url 'registrar' %}">Registrarse</a>
         {% endif %}
+
+        {% if user.is_authenticated %}
+            <a href="{% url 'intercambio:crear_solicitud' %}">Crear intercambio</a>
+        {% endif %}
+
     </nav>
-    
+
+   {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+
     {% block content %}
-
     {% endblock %}
-
-   
 </body>
 </html>
